@@ -8,7 +8,7 @@ d = 384400000 # m
 time_step = 10 #s
 
 T = 2*np.pi*np.sqrt(d**3/(G*(m_e + m_m)))
-max_time = 2*86400
+max_time = T
 time = np.arange(0, max_time, time_step) #s
 n_steps = len(time)
 
@@ -48,12 +48,13 @@ def pos_earth_moon(t,circular=True):
     
 
 
-def acceleration(x, y, t):
+def acceleration(r, t):
     '''
     This function calculates the acceleration on a rocket at position (x,y) at time t
     '''
     pos_earth, pos_moon = pos_earth_moon(t)
-
+    x = r[0]
+    y = r[1]
     # Distance vectors
 
     r_earth = np.array([x - pos_earth[0], y - pos_earth[1]])
@@ -71,54 +72,50 @@ def acceleration(x, y, t):
 
 
 
-def evolve(r_rocket,v_rocket, n_steps,type = 'RK4'):
-    # Preallocate arrays
-    x_r = np.zeros(len(time))
-    y_r = np.zeros(len(time))
-    vx_r = np.zeros(len(time))
-    vy_r = np.zeros(len(time))
-
-    # Set Initial conditions
-    x_r[0],y_r[0]  = r_rocket[0], r_rocket[1]
-    vx_r[0],vy_r[0] = v_rocket[0], v_rocket[1]
+def evolve(r_rocket,v_rocket, n_steps, method = 'RK4'):
+    # Preallocate
+    r = np.zeros((2, n_steps))
+    v = np.zeros((2, n_steps))
+    r[:, 0] = r0
+    v[:, 0] = v0
     
-
-    if type == 'Taylor':
+    if method == 'Taylor':
         for i in range(n_steps-1):
-            a_rocket = acceleration(x_r[i], y_r[i], time[i])
+            a_rocket = acceleration(r[:, i], time[i])
+            
+            r[:, i+1] = r[:, i] + time_step * v[:, i] + 0.5 * time_step**2 * a_rocket
+            v[:, i+1] = v[:, i] + time_step * a_rocket
 
-            x_r[i+1] = x_r[i] + time_step*vx_r[i] + 0.5*time_step**2*a_rocket[0]
-            vx_r[i+1] = vx_r[i] + time_step*a_rocket[0]
-
-            y_r[i+1] = y_r[i] + time_step*vy_r[i] + 0.5*time_step**2*a_rocket[1]
-            vy_r[i+1] = vy_r[i] + time_step*a_rocket[1]
-
-
-    elif type == 'RK4':
-        for i in range(n_steps-1):
+    elif method == 'RK4':
+        for n in range(n_steps-1):
             # z1
-            r = np.array([x_r[i], y_r[i]])
-            v = np.array([vx_r[i], vy_r[i]])
-            z1 = r + 0.5*time_step*v
-            z1_dot = v + 0.5*time_step*acceleration(x_r[i], y_r[i], time[i])[0]
+            z1 = r[:,n] + 0.5*time_step*v[:,n]
+
+            r_ddot = acceleration(r[:, n], time[n])
+            z1_dot = v[:,n] + 0.5*time_step*r_ddot
 
             #z2
-            z2 = r + 0.5*time_step*z1_dot
-            z2_dot = v + 0.5*time_step*acceleration(z1, y_r[i], time[i] + 0.5*time_step)[0]
+            z2 = r[:,n] + 0.5*time_step*z1_dot
+
+            z1_ddot = acceleration(z1, time[n]+0.5*time_step)
+            z2_dot = v[:,n] + 0.5*time_step*z1_ddot
 
             #z3
-            z3 = r + time_step*z2_dot
-            z3_dot = v + time_step*acceleration(z2, y_r[i], time[i] + time_step)[0]
-            
-            
-    pos_rocket = np.array([x_r, y_r])
-    v_rocket = np.array([vx_r, vy_r])
-    return pos_rocket, v_rocket
+            z3 = r[:,n] + time_step*z2_dot
+
+            z2_ddot = acceleration(z2, time[n]+0.5*time_step)
+            z3_dot = v[:,n] + time_step*z2_ddot
+
+            z3_ddot = acceleration(z3, time[n]+time_step)
+            # Combine all
+            r[:, n+1] = r[:, n] + (1/6)*time_step*(v[:, n] + 2*z1_dot + 2*z2_dot + z3_dot)
+            v[:, n+1] = v[:, n] + (1/6)*time_step*(r_ddot + 2*z1_ddot + 2*z2_ddot + z3_ddot)
 
 
+    return r, v
 
 
-pos_rocket, v_rocket = evolve(r0,v0, n_steps)
+pos_rocket, v_rocket = evolve(r0,v0, n_steps, method='Taylor')
 pos_earth, pos_moon = pos_earth_moon(time)
 
 
