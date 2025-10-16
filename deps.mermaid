@@ -1,0 +1,19 @@
+graph TD
+    main["main.py"]
+    plotting["plotting.py"]
+    integrator["integrator.py"]
+    physics_orbits["physics/orbits.py"]
+    physics_dynamics["physics/dynamics.py"]
+    physics_constants["physics/constants.py"]
+    numpy["numpy"]
+    
+    main --> plotting
+    main --> integrator
+    main --> physics_orbits
+    
+    plotting --> numpy
+    integrator --> numpy
+    physics_orbits --> physics_constants
+    physics_orbits --> numpy
+    physics_dynamics --> numpy
+    physics_constants --> numpy
