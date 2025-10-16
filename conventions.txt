@@ -1,0 +1,24 @@
+Conventions:
+
+    Variables:
+        variables are generally named with the convention dimension_object
+
+        e.g. magnitude of distance between earth and moon is d_moon_earth
+             vector from earth and rocket is r_rocket_earth
+             mass of moon is m_moon
+
+    Functions:
+        functions have documentation at the top. 
+
+        First sentence is a summary
+
+        Inputs:
+            input1 (units) - (shape/type) - description
+
+        Outputs:
+            output1 (units) - (shape/type) - description
+    
+    Equations:
+        Leave spaces between each number or operation
+        eg. 2 * np.pi()
+    

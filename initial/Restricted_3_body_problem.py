@@ -12,8 +12,6 @@ max_time = 2*T
 time = np.arange(0, max_time, time_step) #s
 n_steps = len(time)
 
-
-
 def pos_earth_moon(t,circular=True):
     """
     This function returns the position of the Earth-Moon about it's barycenter at time t
