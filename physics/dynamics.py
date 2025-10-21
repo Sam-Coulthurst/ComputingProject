@@ -14,7 +14,7 @@ def acceleration(r_rocket_barycenter, t):
     r_rocket_earth = r_rocket_barycenter - pos_earth
     r_rocket_moon = r_rocket_barycenter - pos_moon
 
-    a_rocket_earth = -G * m_earth * r_rocket_earth / np.linalg.norm(r_rocket_earth)**3
-    a_rocket_moon = -G * m_moon * r_rocket_moon / np.linalg.norm(r_rocket_moon)**3
+    a_rocket_earth = -G * m_earth * r_rocket_earth / (np.linalg.norm(r_rocket_earth)**3)
+    a_rocket_moon = -G * m_moon * r_rocket_moon / (np.linalg.norm(r_rocket_moon)**3)
 
     return a_rocket_earth + a_rocket_moon

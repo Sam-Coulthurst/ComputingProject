@@ -9,6 +9,25 @@ def orbital_period():
     '''
     return 2 * np.pi * np.sqrt(d_earth_moon**3 / (G * (m_earth + m_moon)))
 
+def energy(r,m,v,r1,r2,m1 = m_earth,m2 = m_moon):
+    '''
+    Calculates the total energy of a mass, m, at position r, from two masses, m1 & m2 at positions r1 & r2
+    respectively.
+
+    Inputs:
+        r - position vector of mass you are measuring the energy of. Relative to CoM
+        m - mass of the object
+        v - velocity vector of mass you are measuring the energy of. Relative to CoM
+        r1 - position of larger mass 1  
+        r2 - position of larger mass 2
+        m1 - mass of object 1
+        m2 - mass of object 2
+    
+    '''
+    d1 = np.linalg.norm(r - r1, axis=0)
+    d2 = np.linalg.norm(r - r2, axis=0)
+    return 0.5 * m * np.linalg.norm(v,axis=0)**2 - G * m * (m1 / d1 + m2 / d2)
+
 def compute_L2():
     '''
     Calculates the position and velocity of the L2 Lagrange point in the Earth-Moon system
@@ -19,7 +38,7 @@ def compute_L2():
     T = orbital_period()
     initial_earth, initial_moon = pos_earth_moon(0)
 
-    d = np.linalg.norm(initial_earth - initial_moon) #m
+    d = d_earth_moon #m
     pos_L2 = np.array([initial_moon[0] + d*(m_moon/(3*m_earth))**(1/3), 0]) #m
     v_L2 = np.array([0, (2*np.pi/T) * pos_L2[0]]) #m/s
     return pos_L2, v_L2
