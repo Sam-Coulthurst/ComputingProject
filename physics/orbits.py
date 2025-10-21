@@ -21,7 +21,7 @@ def compute_L2():
 
     d = np.linalg.norm(initial_earth - initial_moon) #m
     pos_L2 = np.array([initial_moon[0] + d*(m_moon/(3*m_earth))**(1/3), 0]) #m
-    v_L2 = np.array([0, -(2*np.pi/T) * pos_L2[0]]) #m/s
+    v_L2 = np.array([0, (2*np.pi/T) * pos_L2[0]]) #m/s
     return pos_L2, v_L2
 
 def pos_earth_moon(t, circular=True):
@@ -41,10 +41,10 @@ def pos_earth_moon(t, circular=True):
     d_earth_barycenter = d_earth_moon * m_moon / (m_earth + m_moon) #m
     d_moon_barycenter = d_earth_moon * m_earth / (m_earth + m_moon) #m
 
-    x_earth_barycenter = d_earth_barycenter * np.cos(omega * t) #m
-    y_earth_barycenter = d_earth_barycenter * np.sin(omega * t) #m
-    x_moon_barycenter = d_moon_barycenter * np.cos(omega * t + np.pi) #m
-    y_moon_barycenter = d_moon_barycenter * np.sin(omega * t + np.pi) #m
+    x_earth_barycenter = d_earth_barycenter * np.cos(omega * t + np.pi) #m
+    y_earth_barycenter = d_earth_barycenter * np.sin(omega * t + np.pi) #m
+    x_moon_barycenter = d_moon_barycenter * np.cos(omega * t) #m
+    y_moon_barycenter = d_moon_barycenter * np.sin(omega * t) #m
 
     return np.array([x_earth_barycenter, y_earth_barycenter]), np.array([x_moon_barycenter, y_moon_barycenter])
 

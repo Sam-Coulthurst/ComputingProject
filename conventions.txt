@@ -9,7 +9,7 @@ Conventions:
 
     Functions:
         functions have documentation at the top. 
-
+        '''
         First sentence is a summary
 
         Inputs:
@@ -17,7 +17,8 @@ Conventions:
 
         Outputs:
             output1 (units) - (shape/type) - description
-    
+        '''
+        
     Equations:
         Leave spaces between each number or operation
         eg. 2 * np.pi()
