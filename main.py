@@ -14,6 +14,7 @@ pos_L2, v_L2 = compute_L2()
 
 # Calculate trajectory
 r_rocket_barycenter, v_rocket_barycenter = evolve(pos_L2, v_L2, time, time_step, method='RK4')
+print(r_rocket_barycenter)
 pos_earth, pos_moon = pos_earth_moon(time)
 
 #Plot the graph
