@@ -7,8 +7,8 @@ def evolve(r0,v0, time, time_step, method = 'RK4'):
     
     # Preallocate
     n_steps = len(time)
-    r = np.zeros((2, n_steps))
-    v = np.zeros((2, n_steps))
+    r = np.zeros((3, n_steps))
+    v = np.zeros((3, n_steps))
     r[:, 0] = r0
     v[:, 0] = v0
 
@@ -49,16 +49,16 @@ def evolve(r0,v0, time, time_step, method = 'RK4'):
         print("Using odeint integrator")
         y0 = np.concatenate((r[:, 0], v[:, 0]))
         sol = odeint(derivatives, y0, time)
-        r = sol[:, :2].T
-        v = sol[:, 2:].T
+        r = sol[:, :3].T
+        v = sol[:, 3:].T
     return r, v
 
 
 def derivatives(y, t):
     # unpack
-    r = y[:2]   # position vector
-    v = y[2:]   # velocity vector
-    
+    r = y[:3]   # position vector
+    v = y[3:]   # velocity vector
+
     # acceleration function (define this elsewhere)
     a = acceleration(r, t)
     

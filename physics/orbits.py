@@ -9,38 +9,43 @@ def orbital_period():
     '''
     return 2 * np.pi * np.sqrt(d_earth_moon**3 / (G * (m_earth + m_moon)))
 
-def energy(r,m,v,r1,r2,m1 = m_earth,m2 = m_moon):
+def Jacobi_constant(r, v, t):
     '''
-    Calculates the total energy of a mass, m, at position r, from two masses, m1 & m2 at positions r1 & r2
-    respectively.
+    Calculates the Jacobi constant for a given position and velocity in the Earth-Moon system
 
     Inputs:
-        r - position vector of mass you are measuring the energy of. Relative to CoM
-        m - mass of the object
-        v - velocity vector of mass you are measuring the energy of. Relative to CoM
-        r1 - position of larger mass 1  
-        r2 - position of larger mass 2
-        m1 - mass of object 1
-        m2 - mass of object 2
-    
+        r (m) - (3 x 1 numpy array) - position vector in the barycentric frame
+        v (m/s) - (3 x 1 numpy array) - velocity vector in the barycentric frame
+        t (s) - (float) - time in seconds
+
+    Outputs:
+        C (J/kg) - float - Jacobi constant per unit mass
     '''
-    d1 = np.linalg.norm(r - r1, axis=0)
-    d2 = np.linalg.norm(r - r2, axis=0)
-    return 0.5 * m * np.linalg.norm(v,axis=0)**2 - G * m * (m1 / d1 + m2 / d2)
+    pos_earth, pos_moon = pos_earth_moon(t)
+    d_rocket_earth = np.linalg.norm(r - pos_earth)
+    d_rocket_moon = np.linalg.norm(r - pos_moon)
+
+    omega = 2 * np.pi / orbital_period()
+
+    U = -G * m_earth / d_rocket_earth - G * m_moon / d_rocket_moon - 0.5 * omega**2 * np.linalg.norm(r)**2
+    K = 0.5 * np.linalg.norm(v)**2
+
+    C = -2 * U - K
+    return C
 
 def compute_L2():
     '''
     Calculates the position and velocity of the L2 Lagrange point in the Earth-Moon system
     Outputs:
-        pos_L2 (m) - (2 x 1 numpy array) - position of L2 in the barycentric frame
-        v_L2 (m) - (2 x 1 numpy array) - [vx (m/s), vy (m/s)] - velocity of L2 in the barycentric frame
+        pos_L2 (m) - (3 x 1 numpy array) - position of L2 in the barycentric frame
+        v_L2 (m) - (3 x 1 numpy array) - [vx (m/s), vy (m/s), vz (m/s)] - velocity of L2 in the barycentric frame
     '''
     T = orbital_period()
     initial_earth, initial_moon = pos_earth_moon(0)
 
     d = d_earth_moon #m
-    pos_L2 = np.array([initial_moon[0] + d*(m_moon/(3*m_earth))**(1/3), 0]) #m
-    v_L2 = np.array([0, (2*np.pi/T) * pos_L2[0]]) #m/s
+    pos_L2 = np.array([initial_moon[0] + d*(m_moon/(3*m_earth))**(1/3), 0,0]) #m
+    v_L2 = np.array([0, (2*np.pi/T) * pos_L2[0], 0]) #m/s
     return pos_L2, v_L2
 
 def pos_earth_moon(t, circular=True):
@@ -64,7 +69,8 @@ def pos_earth_moon(t, circular=True):
     y_earth_barycenter = d_earth_barycenter * np.sin(omega * t + np.pi) #m
     x_moon_barycenter = d_moon_barycenter * np.cos(omega * t) #m
     y_moon_barycenter = d_moon_barycenter * np.sin(omega * t) #m
+    z = np.zeros(np.shape(x_earth_barycenter))
 
-    return np.array([x_earth_barycenter, y_earth_barycenter]), np.array([x_moon_barycenter, y_moon_barycenter])
+    return np.array([x_earth_barycenter, y_earth_barycenter,z]), np.array([x_moon_barycenter, y_moon_barycenter,z])
 
 
