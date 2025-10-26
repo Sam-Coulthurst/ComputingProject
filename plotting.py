@@ -40,9 +40,9 @@ def plot_trajectories(d_earth_barycenter, d_moon_barycenter, d_rocket_barycenter
                 xaxis_title='X Position (m)',
                 yaxis_title='Y Position (m)',
                 zaxis_title='Z Position (m)',
-                xaxis=dict(range=[-5e8, 5e8]),
-                yaxis=dict(range=[-5e8, 5e8]),
-                zaxis=dict(range=[-5e8, 5e8]),
+                xaxis=dict(range=[-1.2, 1.2]),
+                yaxis=dict(range=[-1.2, 1.2]),
+                zaxis=dict(range=[-1.2, 1.2]),
             ),
             title='Earth, Moon, and Rocket Trajectories (Interactive)',
             legend=dict(x=0.8, y=0.9)
@@ -71,8 +71,8 @@ def plot_trajectories(d_earth_barycenter, d_moon_barycenter, d_rocket_barycenter
             yaxis_title='Y Position (m)',
             title='Earth and Moon Orbits relative to Barycenter (Interactive)',
             legend=dict(x=0.8, y=0.9),
-            xaxis=dict(scaleanchor='y', scaleratio=1, range=[-5e8, 5e8]),
-            yaxis=dict(range=[-5e8, 5e8])
+            xaxis=dict(scaleanchor='y', scaleratio=1, range=[-1.2, 1.2]),
+            yaxis=dict(range=[-1.2, 1.2])
         )
 
     fig.show()
