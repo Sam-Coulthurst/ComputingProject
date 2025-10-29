@@ -1,7 +1,6 @@
 import numpy as np
 from physics.dynamics import acceleration
-from scipy.integrate import odeint
-
+from scipy.integrate import odeint, solve_ivp
 
 def evolve(r0,v0, time, time_step, method = 'RK4', frame = 'Inertial'):
     
@@ -51,6 +50,22 @@ def evolve(r0,v0, time, time_step, method = 'RK4', frame = 'Inertial'):
         sol = odeint(derivatives, y0, time)
         r = sol[:, :3].T
         v = sol[:, 3:].T
+
+    elif method == 'RK8':
+        print("Using RK8 integrator")
+        y0 = np.concatenate((r[:, 0], v[:, 0]))
+        sol = solve_ivp(
+            dydt,
+            (time[0], time[-1]),
+            y0,
+            t_eval=time,
+            method='DOP853',
+            rtol=1e-9,
+            atol=1e-12
+        )
+        r = sol.y[:3, :]
+        v = sol.y[3:, :]
+
     return r, v
 
 
@@ -65,3 +80,6 @@ def derivatives(y, t):
     # derivatives
     dydt = np.concatenate((v, a))
     return dydt
+
+def dydt(t, y):
+    return derivatives(y, t)
