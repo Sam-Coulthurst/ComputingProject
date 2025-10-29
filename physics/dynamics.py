@@ -54,6 +54,36 @@ def energy(r,v,t):
 
     return K + U
 
+
+def jacobi_constant(r, v):
+    """
+    Compute the Jacobi constant in the circular restricted three-body problem.
+    
+    Parameters
+    ----------
+    r : array_like, shape (3,)
+        Position vector (x, y, z) in the rotating frame.
+    v : array_like, shape (3,)
+        Velocity vector (vx, vy, vz) in the rotating frame.
+    mu : float
+        Mass parameter mu = m2 / (m1 + m2).
+    
+    Returns
+    -------
+    C : float
+        Jacobi constant.
+    """
+    x, y, z = r
+    vx, vy, vz = v
+    
+    r1 = np.sqrt((x + MU)**2 + y**2 + z**2)
+    r2 = np.sqrt((x - 1 + MU)**2 + y**2 + z**2)
+
+    U = 0.5*(x**2 + y**2) + (1 - MU)/r1 + MU/r2
+    C = 2*U - (vx**2 + vy**2 + vz**2)
+    return C
+
+
 def rotate_to_inertial(r_rot, v_rot, t):
     """
     Rotate from rotating frame to inertial frame for 3xN arrays.
