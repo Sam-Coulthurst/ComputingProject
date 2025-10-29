@@ -9,15 +9,15 @@ def orbital_period():
     '''
     return 2 * np.pi
 
-def compute_L2():
+def compute_L2(alpha=1):
     '''
     Calculates the position and velocity of the L2 Lagrange point in the Earth-Moon system
     Outputs:
         pos_L2 (m) - (3 x 1 numpy array) - position of L2 in the barycentric frame
         v_L2 (m) - (3 x 1 numpy array) - [vx (m/s), vy (m/s), vz (m/s)] - velocity of L2 in the barycentric frame
     '''
-    #delta_r = (MU/(3*(1-MU)))**(1/3)
-    delta_r = 64.5201e6 / L_UNIT  # dimensionless
+    delta_r = alpha * (MU/(3*(1-MU)))**(1/3) 
+    #delta_r = 64.5201e6 / L_UNIT  # dimensionless
     pos_L2 = np.array([1-MU + delta_r, 0,0]) #m
     v_L2 = np.array([0, pos_L2[0], 0]) #m/s
     return pos_L2, v_L2
