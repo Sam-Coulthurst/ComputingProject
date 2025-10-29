@@ -46,7 +46,7 @@ def plot_trajectories(r_earth_barycenter, r_moon_barycenter, r_rocket_barycenter
                 zaxis=dict(range=[-2, 2], showbackground=True, backgroundcolor='black', gridcolor='gray', color='white'),
                 bgcolor='black'
             ),
-            title='Earth, Moon, and Rocket Trajectories (Interactive)',
+            title='Earth, Moon, and Rocket Trajectories',
             legend=dict(x=0.8, y=0.9),
             paper_bgcolor='black',
             plot_bgcolor='black',
