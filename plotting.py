@@ -3,7 +3,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
 
-def plot_trajectories(r_earth_barycenter, r_moon_barycenter, r_rocket_barycenter):
+def plot_trajectories(r_earth_barycenter, r_moon_barycenter, r_rocket_barycenter, optimal = None):
     """
     Interactive 2D/3D plot of Earth, Moon, and Rocket trajectories using Plotly
     """
@@ -35,6 +35,14 @@ def plot_trajectories(r_earth_barycenter, r_moon_barycenter, r_rocket_barycenter
             name='Rocket Trajectory',
             line=dict(width=3, color='red')
         ))
+        if optimal is not None:
+            # Optimal L2 Orbit
+            fig.add_trace(go.Scatter3d(
+                x=optimal[0], y=optimal[1], z=optimal[2],
+                mode='lines',
+                name='Optimal L2 Orbit',
+                line=dict(width=2, color='white', dash='dash')
+            ))
 
         fig.update_layout(
             scene=dict(
@@ -107,7 +115,8 @@ def animate_trajectories(r_earth_barycenter, r_moon_barycenter, r_rocket_barycen
 
     n_frames = r_earth.shape[1]
     indices = np.arange(0, n_frames, max(1, step))
-
+    
+    t_axis = np.arange(n_frames)
     # prepare metric and time axes
     if metric is None:
         metric = np.linalg.norm(r_rocket - r_moon, axis=0)
@@ -115,7 +124,10 @@ def animate_trajectories(r_earth_barycenter, r_moon_barycenter, r_rocket_barycen
         metric = np.asarray(metric)
         if metric.size != n_frames:
             raise ValueError("metric must have same length as trajectories")
-    t_axis = np.arange(n_frames)
+        # initial side plot
+        fig.add_trace(go.Scatter(x=[t_axis[0]], y=[metric[0]], mode='lines', name=metric_label,
+                                line=dict(color='cyan')), row=1, col=2)
+    
 
     # combined figure: 3D + side 2D
     fig = make_subplots(rows=1, cols=2, specs=[[{'type':'scene'}, {'type':'xy'}]], column_widths=[0.72, 0.28])
@@ -128,9 +140,7 @@ def animate_trajectories(r_earth_barycenter, r_moon_barycenter, r_rocket_barycen
     fig.add_trace(go.Scatter3d(x=[r_rocket[0,0]],y=[r_rocket[1,0]],z=[r_rocket[2,0]],
                                mode='markers', name='Rocket',marker=dict(size=3, color='red')),   row=1, col=1)
 
-    # initial side plot
-    fig.add_trace(go.Scatter(x=[t_axis[0]], y=[metric[0]], mode='lines', name=metric_label,
-                             line=dict(color='cyan')), row=1, col=2)
+    
 
     # layout (dark)
     fig.update_layout(
