@@ -14,7 +14,6 @@ def evolve(r0,v0, time, time_step, method = 'RK4', frame = 'Inertial'):
     a = time_step
     
     if method == 'Taylor':
-        print("Using Taylor integrator")
         for i in range(n_steps-1):
             a_rocket = acceleration(r[:, i], time[i], frame)
             
@@ -22,7 +21,6 @@ def evolve(r0,v0, time, time_step, method = 'RK4', frame = 'Inertial'):
             v[:, i+1] = v[:, i] + a * a_rocket
 
     elif method == 'RK4':
-        print("Using RK4 integrator")
         for n in range(n_steps - 1):
             # z1
             r_ddot = acceleration(r[:, n], time[n], frame)
@@ -45,14 +43,12 @@ def evolve(r0,v0, time, time_step, method = 'RK4', frame = 'Inertial'):
             r[:, n+1] = r[:, n] + (a/6) * (v[:, n] + 2*z1_dot + 2*z2_dot + z3_dot)
             v[:, n+1] = v[:, n] + (a/6) * (r_ddot + 2*z1_ddot + 2*z2_ddot + z3_ddot)
     elif method == 'odeint':
-        print("Using odeint integrator")
         y0 = np.concatenate((r[:, 0], v[:, 0]))
         sol = odeint(derivatives, y0, time)
         r = sol[:, :3].T
         v = sol[:, 3:].T
 
     elif method == 'RK8':
-        print("Using RK8 integrator")
         y0 = np.concatenate((r[:, 0], v[:, 0]))
         sol = solve_ivp(
             dydt,
