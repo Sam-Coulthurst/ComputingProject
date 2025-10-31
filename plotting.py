@@ -3,11 +3,11 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
 
-def plot_trajectories(r_earth_barycenter, r_moon_barycenter, r_rocket_barycenter, optimal = None):
+def plot_trajectories(r_earth_barycenter, r_moon_barycenter, r_rocket_barycenter, optimal = None, dimension = 2):
     """
     Interactive 2D/3D plot of Earth, Moon, and Rocket trajectories using Plotly
     """
-    is3d = r_earth_barycenter.shape[0] == 3
+    is3d = dimension == 3
 
     if is3d:
         fig = go.Figure()
@@ -49,9 +49,9 @@ def plot_trajectories(r_earth_barycenter, r_moon_barycenter, r_rocket_barycenter
                 xaxis_title='X Position (m)',
                 yaxis_title='Y Position (m)',
                 zaxis_title='Z Position (m)',
-                xaxis=dict(range=[-2, 2], showbackground=True, backgroundcolor='black', gridcolor='gray', color='white'),
-                yaxis=dict(range=[-2, 2], showbackground=True, backgroundcolor='black', gridcolor='gray', color='white'),
-                zaxis=dict(range=[-2, 2], showbackground=True, backgroundcolor='black', gridcolor='gray', color='white'),
+                xaxis=dict(range=[-2e7, 2e7], showbackground=True, backgroundcolor='black', gridcolor='gray', color='white'),
+                yaxis=dict(range=[-2e7, 2e7], showbackground=True, backgroundcolor='black', gridcolor='gray', color='white'),
+                zaxis=dict(range=[-2e7, 2e7], showbackground=True, backgroundcolor='black', gridcolor='gray', color='white'),
                 bgcolor='black'
             ),
             title='Earth, Moon, and Rocket Trajectories',
