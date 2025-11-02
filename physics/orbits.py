@@ -21,7 +21,7 @@ def compute_L2(alpha=1):
         v_L2 (m) - (3 x 1 numpy array) - [vx (m/s), vy (m/s), vz (m/s)] - velocity of L2 in the barycentric frame
     '''
     delta_r = alpha * d_earth_moon_SI * (m_moon_SI/(3*m_earth_SI))**(1/3)
-    #print(f'Optimal delta_r: {delta_r*1e-3} km')
+    print(f'Optimal delta_r: {delta_r*1e-3} km')
     pos_moon = (m_earth_SI/(m_earth_SI + m_moon_SI)) * d_earth_moon_SI
     
     pos_L2 = np.array([pos_moon + delta_r, 0,0]) 
