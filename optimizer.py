@@ -22,20 +22,23 @@ def optimize_delta_r(alpha):
     pos_L2, v_L2 = compute_L2(alpha = alpha)
     r_L2 = optimal_L2_orbit(pos_L2, time)
 
+    pos_L2 = np.array(pos_L2, dtype=np.float64)
+    v_L2 = np.array(v_L2, dtype=np.float64)
+    time = np.array(time, dtype=np.float64)
     r_rocket_barycenter, v_rocket_barycenter = evolve(pos_L2, v_L2, time,
                                                       EoM=acceleration,
-                                                      method='RK4')
+                                                      method='RK8')
 
     errors = np.linalg.norm(r_rocket_barycenter - r_L2, axis=1)
-    print(np.shape(errors))
+    #print(np.shape(errors))
     lengths = np.linalg.norm(r_rocket_barycenter, axis=1)
     rms = np.sqrt(np.mean(errors**2))
     std = np.std(lengths)
     mean = np.mean(lengths)
     plt.plot(r_L2[:,0],r_L2[:,1],linestyle='--', color='black', label='Optimal L2 Orbit')
     plt.plot(r_rocket_barycenter[:,0],r_rocket_barycenter[:,1], label='Rocket Trajectory')
-    plt.xlim(-2e-8, 2e-8)
-    plt.ylim(-2e-8, 2e-8)
+    plt.xlim(-4e8, 4e8)
+    plt.ylim(-4e8, 4e8)
     plt.axis('equal')
     return std/mean
 
